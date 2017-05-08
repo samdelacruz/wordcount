@@ -15,7 +15,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	counts := wordcount.FromString(string(body))
+
+	bodyStr := string(body)
+	counts := wordcount.FromString(&bodyStr)
 
 	jsonStr, err := json.Marshal(counts)
 	fmt.Fprintf(w, "%s", jsonStr)
