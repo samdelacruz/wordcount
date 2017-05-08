@@ -17,6 +17,7 @@ func TestFromString(t *testing.T) {
 		{"Multi word", "hello hello", map[string]int{"hello": 2}},
 		{"Case insensitive", "Hello hello", map[string]int{"hello": 2}},
 		{"Many words", "hello world hello", map[string]int{"hello": 2, "world": 1}},
+		{"Ignore non-alphanumeric", "Dog.", map[string]int{"dog": 1}},
 		{"Empty", "", map[string]int{}},
 	}
 	for _, tt := range tests {
