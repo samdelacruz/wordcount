@@ -1,20 +1,28 @@
-package wordcount
+package main
 
-import "strings"
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 
-// FromString counts the number of occurences of each word in a string
-func FromString(text *string) map[string]int {
-	words := strings.Split(strings.ToLower(*text), " ")
-	return FromWords(&words)
-}
+	"github.com/samdelacruz/wordcount/counter"
+)
 
-// FromWords counts the number of occurences of each word in a list of strings
-func FromWords(words *[]string) map[string]int {
-	counts := make(map[string]int)
-
-	for _, word := range *words {
-		counts[word]++
+func handler(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
 	}
 
-	return counts
+	bodyStr := string(body)
+	counts := counter.FromString(&bodyStr)
+
+	jsonStr, err := json.Marshal(counts)
+	fmt.Fprintf(w, "%s", jsonStr)
+}
+
+func main() {
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":8080", nil)
 }
